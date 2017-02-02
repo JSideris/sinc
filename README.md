@@ -25,7 +25,7 @@ A few major improvements are as follows:
  - An option to enable revision history.
  - Track chanegs / diffs.
  - File statistics & information.
- - A mobile version of the web server so that you can remotely access files on your cellphone without a lot of BS.
+ - A mobile version of the web server so that you can remotely access files on your cellphone without a lot of shenanigans.
  - Possibly other cloud-like features like remote-control (e.g. playing music remotely, controlling your Android TV box from your cellphone, etc).
 
 You can help me reach these goals by donating money towards this project. Even a small contribution will allow me to shift time and resources into this project to accelerate the timeline.
