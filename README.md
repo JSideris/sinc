@@ -13,8 +13,11 @@ Cloud storage is great too, so choose the solution that’s right for you.
 ## Features
 SINC is a Node.js-based web server application that you can run on your personal computer to access a directory of shared files. It’s really that simple. 
 
-##Setup
-SINC isn’t ready yet so you can’t download or use it. Come back later for instructions on how to get stated.
+## Setup & Usage
+I'm working on an installer, but for now you can run the SINC server app by installing node js. 
+You'll also need to install the following two dependencies via npm: express, multer. 
+Configure your firewall to allow inbound connections via LAN, and connect to the host from remote computers by typing in the IP address and port.
+The UI has no way of deleting files yet. Shared files are stored at \sinc\public\shared.
 
 ## SINC is a work in progress.
 A few major improvements are as follows:

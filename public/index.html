@@ -1,0 +1,136 @@
+<!doctype html>
+
+<html>
+<link rel="stylesheet" type="text/css" href="style.css" />
+<script src="jquery.js"></script>
+<script src="jquery.fileDownload.js"></script>
+<script src="dothtml.js"></script>
+<body>
+	<iframe id="my_iframe" style="display:none;"></iframe>
+</body>
+<script>
+	DOT.div(
+		DOT
+		.div().id("filetable")
+		.div(
+			DOT
+			.form(
+				DOT.input().id("fileselect").type("file").name("filselect[]").multiple().style("font-size: 28px; background-color: #5F5; padding: 10px;")
+				.br()
+				.div("Or drop files here.").id("filedrag")
+				.br()
+				.br()
+				.span().id("progressbardescription").style("color: white;")
+				.br()
+				.progress().id("uploadprogress").value(0).max(100).style("width: 100%;")
+			).id("fileuploadform").enctype("multipart/form-data").action("/fileupload").method("post")
+		).id("actionsui")
+	).id("bodycontainer")
+	.$write("body");
+	
+	progressNode = document.getElementById("uploadprogress");
+	
+	// getElementById
+	function $id(id) {
+		return document.getElementById(id);
+	}
+
+
+	var fileselect = $id("fileselect"),
+		filedrag = $id("filedrag");
+
+	// file select
+	fileselect.addEventListener("change", FileSelectHandler, false);
+	
+	// file drop
+	filedrag.addEventListener("dragover", FileDragHover, false);
+	filedrag.addEventListener("dragleave", FileDragHover, false);
+	filedrag.addEventListener("drop", FileSelectHandler, false);
+
+	
+	// file drag hover
+	function FileDragHover(e) {
+		e.stopPropagation();
+		e.preventDefault();
+		e.target.className = (e.type == "dragover" ? "hover" : "");
+	}
+	
+	function UploadFile(file) { //TODO: I believe the backend supports multiple files uploads at once. Exploit.
+		var formData = new FormData();
+		//var file = document.getElementById('myFile').files[0];
+		formData.append('file', file);
+		var xhr = new XMLHttpRequest();
+
+		// your url upload
+		xhr.open('post', '/fileupload', true);
+
+		xhr.upload.onprogress = function(e) {
+			document.getElementById("progressbardescription").innerHTML = "Uploading " + file.name;
+			if (e.lengthComputable) {
+				var percentage = (e.loaded / e.total) * 100;
+				progressNode.value = percentage;
+				//console.log(percentage + "%");
+			}
+			else{
+				
+			}
+		};
+
+		xhr.onerror = function(e) {
+			console.log('Error');
+			console.log(e);
+		};
+		xhr.onload = function() {
+			console.log(this.statusText);
+			document.getElementById("progressbardescription").innerHTML = "Done";
+			addFileToList(file.name).appendToId("filetable");
+		};
+
+		xhr.send(formData);
+	}
+		
+	function FileSelectHandler(e) {
+
+		// cancel event and hover styling
+		FileDragHover(e);
+
+		// fetch FileList object
+		var files = e.target.files || e.dataTransfer.files;
+
+		// process all File objects
+		for (var i = 0, f; f = files[i]; i++) {
+			
+			UploadFile(f);
+		}
+
+	}
+	
+	function addFileToList(file){
+		var extensionSupported = allIcons.indexOf(file.split(".").pop().toLowerCase());
+		var icon = "/icons/page.png";
+		if(extensionSupported != -1){
+			var icon = "/icons/file_extension_" + allIcons[extensionSupported] + ".png";
+		}
+		return DOT.a(DOT.div().class("iconholder").style("background-image: url(\"" + icon + "\")").h(file)).class("fileentry").href("shared/" + file).download(file);
+	}
+	
+	
+	$.ajax({
+		url: "/getsharefiles",
+		method: "GET",
+		//data: data,
+		success: function(response){
+			$("#filetable").empty();
+			DOT
+			.each(response, addFileToList)
+			.appendToId("filetable");
+		},
+		error: function(){
+			alert("Could not get file list.");
+		}
+		//dataType: dataType
+	});
+	
+	var allIcons = ["3gp", "7z", "ace", "ai", "aif", "aiff", "amr", "asf", "asx", "bat", "bin", "bmp", "bup", "cab", "cbr", "cda", "cdl", "cdr", "chm", "dat", "divx", "dll", "dmg", "doc", "dss", "dvf", "dwg", "eml", "eps", "exe", "fla", "flv", "gif", "gz", "hqx", "htm", "html", "ifo", "indd", "iso", "jar", "jpeg", "jpg", "lnk", "log", "m4a", "m4b", "m4p", "m4v", "mcd", "mdb", "mid", "mov", "mp2", "mp4", "mpeg", "mpg", "msi", "mswmm", "ogg", "pdf", "png", "pps", "ps", "psd", "pst", "ptb", "pub", "qbb", "qbw", "qxd", "ram", "rar", "rm", "rmvb", "rtf", "sea", "ses", "sit", "sitx", "ss", "swf", "tgz", "thm", "tif", "tmp", "torrent", "ttf", "txt", "vcd", "vob", "wav", "wma", "wmv", "wps", "xls", "xpi", "zip"];
+</script>
+</html>
