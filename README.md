@@ -23,6 +23,8 @@ A few major improvements are as follows:
  - P2P file sharing over the internet.
  - Chat.
  - An option to enable revision history.
+ - Track chanegs / diffs.
+ - File statistics & information.
  - A mobile version of the web server so that you can remotely access files on your cellphone without a lot of BS.
  - Possibly other cloud-like features like remote-control (e.g. playing music remotely, controlling your Android TV box from your cellphone, etc).
 
